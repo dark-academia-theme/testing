@@ -1,0 +1,64 @@
+# Source: Hummingbird core-runtime 2.43 builder, linux/amd64 release input.
+FROM registry.access.redhat.com/hi/core-runtime@sha256:d939459917ebea5ea4f31187050959ad5cc833c6554b54080ebafd0c4142212c
+
+ENV COLORTERM=truecolor \
+    HOME=/home/nonroot \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    TERM=xterm-256color \
+    TZ=UTC \
+    XDG_CONFIG_HOME=/home/nonroot/.config \
+    XDG_DATA_HOME=/home/nonroot/.local/share
+
+LABEL org.opencontainers.image.source="https://github.com/dark-academia-theme/testing" \
+      org.opencontainers.image.title="Dark Academia theme harness" \
+      org.opencontainers.image.description="Pinned terminal theme test runtime" \
+      org.opencontainers.image.licenses="MIT"
+
+USER 0
+
+COPY container/keys/RPM-GPG-KEY-fedora-43-primary /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-43-primary
+COPY container/repositories/fedora-43.repo /etc/yum.repos.d/fedora-43.repo
+COPY container/licenses/Iosevka-OFL-1.1.txt /usr/share/licenses/iosevka-nerd-fonts/OFL-1.1.txt
+COPY container/install-font.sh /usr/local/libexec/theme-harness/install-font.sh
+COPY container/verify-runtime.sh /usr/local/bin/verify-theme-harness-runtime
+
+RUN chmod 0755 /usr/local/libexec/theme-harness/*.sh \
+      /usr/local/bin/verify-theme-harness-runtime && \
+    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-43-primary && \
+    dnf -y install \
+      fontconfig-0:2.18.3-1.hum1.x86_64 \
+      git-0:2.55.0-2.hum1.x86_64 \
+      gzip-0:1.14-4.hum1.x86_64 \
+      tar-2:1.35-10.hum1.x86_64 \
+      xz-1:5.8.3-2.hum1.x86_64 && \
+    dnf clean all
+
+RUN dnf -y --disablerepo='*' --enablerepo=fedora-43-everything \
+      --setopt=install_weak_deps=False install --allowerasing \
+      chromium-0:141.0.7390.54-1.fc43.x86_64 \
+      ffmpeg-free-0:7.1.2-2.fc43.x86_64 \
+      ImageMagick-1:7.1.1.47-3.fc43.x86_64 \
+      jq-0:1.7.1-12.fc43.x86_64 \
+      tesseract-0:5.5.1-3.fc43.x86_64 \
+      tesseract-langpack-eng-0:4.1.0-11.fc43.noarch \
+      ttyd-0:1.7.7-7.fc43.x86_64 \
+      vhs-0:0.10.0-3.fc43.x86_64 && \
+    dnf -y install --allowerasing \
+      fontconfig-0:2.18.3-1.hum1.x86_64 \
+      git-0:2.55.0-2.hum1.x86_64 \
+      gzip-0:1.14-4.hum1.x86_64 \
+      tar-2:1.35-10.hum1.x86_64 \
+      xz-1:5.8.3-2.hum1.x86_64 && \
+    dnf clean all && \
+    /usr/local/libexec/theme-harness/install-font.sh && \
+    ln -s /usr/bin/chromium-browser /usr/local/bin/chromium && \
+    groupadd --gid 1001 nonroot && \
+    useradd --uid 1001 --gid 1001 --create-home \
+      --home-dir /home/nonroot --shell /bin/bash nonroot && \
+    install -d -m 0755 -o nonroot -g nonroot \
+      /home/nonroot/.config /home/nonroot/.local/share
+
+USER nonroot
+WORKDIR /workspaces
+CMD ["/bin/bash"]

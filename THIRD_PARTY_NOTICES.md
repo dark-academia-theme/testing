@@ -1,0 +1,89 @@
+# Third-Party Notices
+
+This inventory covers third-party material copied into the repository, included
+in the harness image, or invoked only by its GitHub Actions workflow. Package
+licenses installed by RPM remain available under `/usr/share/licenses` in the
+image.
+
+## Hummingbird base image
+
+- **Affected path:** `container/Containerfile` and the resulting image.
+- **Source:** `registry.access.redhat.com/hi/core-runtime` version 2.43 builder,
+  OCI index digest
+  `sha256:d939459917ebea5ea4f31187050959ad5cc833c6554b54080ebafd0c4142212c`;
+  upstream source is <https://gitlab.com/redhat/hummingbird/containers> revision
+  `ff8f5060c8fb0c3354400626864fe5866d429e13`.
+- **Integrity:** digest-selected OCI index; its `linux/amd64` child manifest is
+  `sha256:c6880ce5a0f2a9e025c0bf22c546aacbf8ddb60833ea2baa5fa36a5fadfd37e3`.
+- **License:** Red Hat terms referenced by image metadata at
+  <https://www.redhat.com/en/about-red-hat-end-user-license-agreements#UBI>.
+- **Attribution and use:** the image metadata identifies Red Hat and Project
+  Hummingbird. The base and its RPM contents are redistributed in the harness
+  image; their installed notices are retained.
+
+## Fedora 43 signing key and RPM packages
+
+- **Affected paths:** `container/keys/RPM-GPG-KEY-fedora-43-primary`,
+  `container/repositories/fedora-43.repo`, `container/Containerfile`, and the
+  resulting image.
+- **Sources:** the key is copied from
+  <https://src.fedoraproject.org/rpms/fedora-repos/raw/f43/f/RPM-GPG-KEY-fedora-43-primary>;
+  packages come only from
+  <https://dl.fedoraproject.org/pub/fedora/linux/releases/43/Everything/x86_64/os/>.
+- **Versions:** Chromium `141.0.7390.54-1.fc43`, ImageMagick
+  `1:7.1.1.47-3.fc43`, Tesseract `5.5.1-3.fc43`, English Tesseract data
+  `4.1.0-11.fc43`, jq `1.7.1-12.fc43`, ttyd `1.7.7-7.fc43`, ffmpeg-free
+  `7.1.2-2.fc43`, and their DNF-resolved runtime dependencies.
+- **Integrity:** key SHA-256
+  `2b1449a082d3264dda8e18369f04e9ac4163bf3f8cb530b0783dc2ab064a08ec`;
+  verified key fingerprint `C6E7 F081 CF80 E131 4667 6E88 829B 6066 3164
+  5531`; DNF enforces RPM signatures with `gpgcheck=1`.
+- **Licenses:** Chromium has BSD, LGPL, Apache, IJG, MIT, GPL, ISC, OpenSSL,
+  and tri-licensed components; ImageMagick uses the ImageMagick license;
+  Tesseract and its English data use Apache-2.0; jq uses MIT, ICU, and
+  CC-BY-3.0; ttyd uses MIT; ffmpeg-free uses GPL-3.0-or-later. Package notices
+  installed by the signed RPMs are retained in the redistributed image.
+
+## Fedora VHS and runtime dependencies
+
+- **Affected path:** `container/Containerfile` and the resulting image.
+- **Source and version:** Fedora 43 Everything VHS `0.10.0-3.fc43`; official
+  package metadata is at
+  <https://packages.fedoraproject.org/pkgs/vhs/vhs/fedora-43.html>.
+- **Integrity:** exact EVR and x86_64 architecture, installed through the signed
+  Fedora repository. The direct runtime dependencies are ffmpeg-free, glibc,
+  and ttyd; their complete signed RPM dependency closure is recorded by the
+  image package inventory.
+- **Licenses:** Apache-2.0, BSD-3-Clause, MIT, MPL-2.0, and OFL-1.1 components.
+  VHS and its dependencies are redistributed in the image with RPM-installed
+  notices preserved.
+
+## Nerd Fonts Iosevka
+
+- **Affected paths:** `container/install-font.sh`,
+  `container/licenses/Iosevka-OFL-1.1.txt`, and fonts installed under
+  `/usr/local/share/fonts/iosevka-nerd-font-mono` in the resulting image.
+- **Source and version:** Nerd Fonts `v3.5.1`, asset `Iosevka.tar.xz`, from
+  <https://github.com/ryanoasis/nerd-fonts/releases/tag/v3.5.1>.
+- **Integrity:** SHA-256
+  `3b94ea1dc3955756762f977b7677bca671947dd56bc755a6f8465a8e83b5f257`,
+  matching the release's `SHA-256.txt`.
+- **License and attribution:** SIL Open Font License 1.1; copyright
+  2015–2023 Renzhi Li (Belleve Invis). The required copyright and full license
+  are copied from the versioned upstream notice and redistributed in the image.
+
+## GitHub Actions
+
+The following actions are invoked only during CI and are not copied into the
+harness image. Each reference is pinned to a commit that matches the listed
+upstream release. MIT and Apache-2.0 notices remain in the action distributions
+provided by their publishers.
+
+| Action | Commit | Release | License |
+| --- | --- | --- | --- |
+| `actions/checkout` | `3d3c42e5aac5ba805825da76410c181273ba90b1` | `v7.0.1` | MIT |
+| `docker/login-action` | `dbcb813823bdd20940b903addbd779551569679f` | `v4.6.0` | Apache-2.0 |
+| `docker/setup-buildx-action` | `f87e5991a6d7451dcb8d9637bfbc97413f497069` | `v4.4.1` | Apache-2.0 |
+| `docker/metadata-action` | `dc802804100637a589fabce1cb79ff13a1411302` | `v6.2.0` | Apache-2.0 |
+| `docker/build-push-action` | `c3c9e263c25d99ce0380d002d59b67737d91b0dc` | `v7.4.0` | Apache-2.0 |
+| `actions/attest` | `1e69f48acb82d1966a394da916b4c1698aa569d6` | `v4.2.2` | MIT |
