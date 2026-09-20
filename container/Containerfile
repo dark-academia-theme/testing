@@ -1,4 +1,18 @@
 # Source: Hummingbird core-runtime 2.43 builder, linux/amd64 release input.
+FROM registry.access.redhat.com/hi/core-runtime@sha256:d939459917ebea5ea4f31187050959ad5cc833c6554b54080ebafd0c4142212c AS font-extractor
+
+USER 0
+
+COPY container/licenses/Iosevka-OFL-1.1.txt /tmp/Iosevka-OFL-1.1.txt
+COPY container/install-font.sh /usr/local/libexec/theme-harness/install-font.sh
+
+RUN chmod 0755 /usr/local/libexec/theme-harness/install-font.sh && \
+    dnf -y install \
+      tar-2:1.35-10.hum1.x86_64 \
+      xz-1:5.8.3-2.hum1.x86_64 && \
+    dnf clean all && \
+    /usr/local/libexec/theme-harness/install-font.sh
+
 FROM registry.access.redhat.com/hi/core-runtime@sha256:d939459917ebea5ea4f31187050959ad5cc833c6554b54080ebafd0c4142212c
 
 ENV COLORTERM=truecolor \
@@ -19,12 +33,11 @@ USER 0
 
 COPY container/keys/RPM-GPG-KEY-fedora-43-primary /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-43-primary
 COPY container/repositories/fedora-43.repo /etc/yum.repos.d/fedora-43.repo
-COPY container/licenses/Iosevka-OFL-1.1.txt /usr/share/licenses/iosevka-nerd-fonts/OFL-1.1.txt
-COPY container/install-font.sh /usr/local/libexec/theme-harness/install-font.sh
+COPY --from=font-extractor /out/fonts/iosevka-nerd-font-mono /usr/local/share/fonts/iosevka-nerd-font-mono
+COPY --from=font-extractor /out/licenses/iosevka-nerd-fonts /usr/share/licenses/iosevka-nerd-fonts
 COPY container/verify-runtime.sh /usr/local/bin/verify-theme-harness-runtime
 
-RUN chmod 0755 /usr/local/libexec/theme-harness/*.sh \
-      /usr/local/bin/verify-theme-harness-runtime && \
+RUN chmod 0755 /usr/local/bin/verify-theme-harness-runtime && \
     rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-43-primary && \
     dnf -y install \
       fontconfig-0:2.18.3-1.hum1.x86_64 \
@@ -53,7 +66,7 @@ RUN dnf -y --disablerepo='*' --enablerepo=fedora-43-everything \
       tar-2:1.35-10.hum1.x86_64 \
       xz-1:5.8.3-2.hum1.x86_64 && \
     dnf clean all && \
-    /usr/local/libexec/theme-harness/install-font.sh && \
+    fc-cache --force && \
     ln -s /usr/bin/chromium-browser /usr/local/bin/chromium && \
     groupadd --gid 1001 nonroot && \
     useradd --uid 1001 --gid 1001 --create-home \

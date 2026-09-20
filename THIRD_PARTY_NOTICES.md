@@ -102,8 +102,10 @@ image.
 - **License and attribution:** SIL Open Font License 1.1; copyright
   2015–2023 Renzhi Li (Belleve Invis). The required copyright and full license
   are copied from the versioned upstream notice and redistributed in the image.
-- **Material modifications:** none; the verified archive is extracted without
-  changing its font files.
+- **Material modifications:** the verified archive contains 27 files in each of
+  its Mono, proportional, and non-Mono families. The build copies all 27
+  `IosevkaNerdFontMono-*` files byte-for-byte and excludes the other 54 font
+  files; the selected files themselves are not modified.
 
 ## GitHub Actions
 
