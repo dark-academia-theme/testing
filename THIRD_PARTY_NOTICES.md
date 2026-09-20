@@ -28,8 +28,9 @@ image.
 - **Affected path:** `container/Containerfile` and the resulting image.
 - **Source:** Hummingbird's signed x86_64 RPM repository at
   <https://packages.redhat.com/api/pulp-content/public-hummingbird/x86_64/>.
-- **Versions:** fontconfig `0:2.18.3-1.hum1`, Git `0:2.55.0-2.hum1`, gzip
-  `0:1.14-4.hum1`, tar `2:1.35-10.hum1`, and xz `1:5.8.3-2.hum1`.
+- **Versions:** fontconfig `0:2.18.3-1.hum1`, Git `0:2.55.0-2.hum1`,
+  glibc-gconv-extra `0:2.43-8.5.hum1`, gzip `0:1.14-4.hum1`, tar
+  `2:1.35-10.hum1`, and xz `1:5.8.3-2.hum1`.
 - **Integrity:** exact NEVRA pins; DNF package-signature verification is enabled
   with the repository key at
   `/etc/pki/rpm-gpg/RPM-GPG-KEY-hummingbird-release`. Each installed direct RPM
@@ -37,53 +38,64 @@ image.
 - **Licenses:** fontconfig uses HPND, Fedora's public-domain license reference,
   and Unicode-DFS-2016; Git uses BSD-3-Clause, GPL-2.0-only,
   GPL-2.0-or-later, LGPL-2.1-or-later, and MIT; gzip uses GPL-3.0-or-later and
-  GFDL-1.3-only; tar uses GPL-3.0-or-later; xz uses 0BSD, GPL-2.0-or-later, and
-  Fedora's public-domain license reference.
-- **Attribution and use:** all five packages are redistributed inside the image.
+  GFDL-1.3-only; glibc-gconv-extra carries glibc's composite RPM license
+  expression, including LGPL, GPL, BSD, ISC, MIT, Unicode, GFDL, HPND, X11,
+  public-domain, and named exception terms; tar uses GPL-3.0-or-later; xz uses
+  0BSD, GPL-2.0-or-later, and Fedora's public-domain license reference.
+- **Attribution and use:** all six packages are redistributed inside the image.
   Their RPM-installed copyright and license notices are retained under
   `/usr/share/licenses` and `/usr/share/doc` where supplied.
 - **Material modifications:** none to the RPM payloads.
 
 ## Fedora 43 signing key and RPM packages
 
-- **Affected paths:** `container/keys/RPM-GPG-KEY-fedora-43-primary`,
-  `container/repositories/fedora-43.repo`, `container/Containerfile`, and the
-  resulting image.
-- **Sources:** the key is copied from
+- **Affected paths:** `container/repositories/fedora-43.repo`,
+  `container/fedora-43-amd64.lock`, `container/Containerfile`, and the resulting
+  image.
+- **Sources:** the build retrieves the key from
   <https://src.fedoraproject.org/rpms/fedora-repos/raw/f43/f/RPM-GPG-KEY-fedora-43-primary>;
-  packages come only from
-  <https://dl.fedoraproject.org/pub/fedora/linux/releases/43/Everything/x86_64/os/>.
-- **Versions:** Chromium `141.0.7390.54-1.fc43`, ImageMagick
-  `1:7.1.1.47-3.fc43`, Tesseract `5.5.1-3.fc43`, English Tesseract data
-  `4.1.0-11.fc43`, jq `1.7.1-12.fc43`, ttyd `1.7.7-7.fc43`, ffmpeg-free
-  `7.1.2-2.fc43`, and their DNF-resolved runtime dependencies.
+  packages come only from Fedora 43 Everything's signed
+  [release](https://dl.fedoraproject.org/pub/fedora/linux/releases/43/Everything/x86_64/os/)
+  and [updates](https://dl.fedoraproject.org/pub/fedora/linux/updates/43/Everything/x86_64/)
+  repositories.
+- **Versions:** Chromium Headless and Chromium Common `153.0.8010.36-1.fc43`,
+  ImageMagick `1:7.1.2.27-1.fc43`, Tesseract `5.5.3-1.fc43`, English Tesseract
+  data `4.1.0-11.fc43`, jq `1.8.1-3.fc43`, ttyd `1.7.7-7.fc43`, ffmpeg-free
+  `7.1.5-1.fc43`, VHS `0.10.0-4.fc43`, and the complete 344-RPM transaction
+  closure recorded by exact NEVRA, SHA-256, and source repository in
+  `container/fedora-43-amd64.lock`.
 - **Integrity:** key SHA-256
   `2b1449a082d3264dda8e18369f04e9ac4163bf3f8cb530b0783dc2ab064a08ec`;
   verified key fingerprint `C6E7 F081 CF80 E131 4667 6E88 829B 6066 3164
-  5531`; DNF enforces RPM signatures with `gpgcheck=1`.
+  5531`; pinned release and updates `repomd.xml` SHA-256 values; per-RPM
+  SHA-256 values; and RPM signatures enforced with `gpgcheck=1`.
 - **Signing-key license:** Fedora package metadata lists the `fedora-repos`
   source and its `fedora-gpg-keys` subpackage as MIT, but the public-key file
   has no file-specific license or attribution notice. This inventory records
-  provenance without asserting separate rights in the key material; publication
-  requires resolving that file-specific ambiguity.
+  package-level provenance without asserting that MIT relicenses the key bytes.
+  The verified key is imported and the temporary downloaded file is removed in
+  the same build layer; the repository and final image do not redistribute the
+  key file.
 - **Licenses:** Chromium has BSD, LGPL, Apache, IJG, MIT, GPL, ISC, OpenSSL,
   and tri-licensed components; ImageMagick uses the ImageMagick license;
   Tesseract and its English data use Apache-2.0; jq uses MIT, ICU, and
   CC-BY-3.0; ttyd uses MIT; ffmpeg-free uses GPL-3.0-or-later. Package notices
   installed by the signed RPMs are retained in the redistributed image.
-- **Material modifications:** the key is copied byte-for-byte and RPM payloads
-  are installed without modification.
+- **Material modifications:** the key bytes and RPM payloads are not modified.
+  Full Chromium is replaced by Fedora's matching headless package, exposed under
+  the command name expected by the harness.
 
 ## Fedora VHS and runtime dependencies
 
 - **Affected path:** `container/Containerfile` and the resulting image.
-- **Source and version:** Fedora 43 Everything VHS `0.10.0-3.fc43`; official
+- **Source and version:** Fedora 43 updates VHS `0.10.0-4.fc43`; official
   package metadata is at
   <https://packages.fedoraproject.org/pkgs/vhs/vhs/fedora-43.html>.
 - **Integrity:** exact EVR and x86_64 architecture, installed through the signed
-  Fedora repository. The direct runtime dependencies are ffmpeg-free, glibc,
-  and ttyd; their complete signed RPM dependency closure is recorded by the
-  image package inventory.
+  Fedora repositories. The direct runtime dependencies are ffmpeg-free, glibc,
+  and ttyd. glibc comes from the pinned Hummingbird base and direct package set;
+  the complete remaining 344-package Fedora closure is recorded in
+  `container/fedora-43-amd64.lock`.
 - **Licenses:** Apache-2.0, BSD-3-Clause, MIT, MPL-2.0, and OFL-1.1 components.
   VHS and its dependencies are redistributed in the image with RPM-installed
   notices preserved.
@@ -103,9 +115,9 @@ image.
   2015–2023 Renzhi Li (Belleve Invis). The required copyright and full license
   are copied from the versioned upstream notice and redistributed in the image.
 - **Material modifications:** the verified archive contains 27 files in each of
-  its Mono, proportional, and non-Mono families. The build copies all 27
-  `IosevkaNerdFontMono-*` files byte-for-byte and excludes the other 54 font
-  files; the selected files themselves are not modified.
+  its Mono, proportional, and non-Mono families. The build copies only the Mono
+  Regular, Bold, Italic, and Bold Italic files byte-for-byte and excludes the
+  other 77 files; the selected files themselves are not modified.
 
 ## GitHub Actions
 
@@ -123,3 +135,4 @@ code, upstream action distributions retain their own required notices.
 | [`docker/metadata-action`](https://github.com/docker/metadata-action) | `dc802804100637a589fabce1cb79ff13a1411302` | `v6.2.0` | Apache-2.0; retain its license, notices, and attribution if redistributed. |
 | [`docker/build-push-action`](https://github.com/docker/build-push-action) | `c3c9e263c25d99ce0380d002d59b67737d91b0dc` | `v7.4.0` | Apache-2.0; retain its license, notices, and attribution if redistributed. |
 | [`actions/attest`](https://github.com/actions/attest) | `1e69f48acb82d1966a394da916b4c1698aa569d6` | `v4.2.2` | MIT; retain the GitHub copyright and MIT notice if redistributed. |
+| [`anchore/scan-action`](https://github.com/anchore/scan-action) | `27805bf3b4e84b4a5c980df22ed233c00390a439` | `v7.4.2` | MIT; retain the Anchore copyright and MIT notice if redistributed. |

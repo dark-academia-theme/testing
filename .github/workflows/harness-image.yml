@@ -30,11 +30,37 @@ jobs:
         run: docker run --rm theme-harness:validation verify-theme-harness-runtime
       - name: Run VHS smoke test
         run: >-
-          docker run --rm
+          docker run --rm --network none
           --mount type=bind,source="$PWD",target=/workspaces/testing
           --workdir /workspaces/testing
           theme-harness:validation
           bash tests/smoke.sh
+      - name: Test vulnerability gate
+        run: bash tests/grype-gate-test.sh
+      - name: Scan Hummingbird and language ecosystems
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439
+        with:
+          image: theme-harness:validation
+          output-format: json
+          output-file: grype-hummingbird.json
+          fail-build: false
+          grype-version: 0.119.0
+      - name: Scan Fedora package ecosystem
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439
+        env:
+          GRYPE_DISTRO: fedora:43
+        with:
+          image: theme-harness:validation
+          output-format: json
+          output-file: grype-fedora.json
+          fail-build: false
+          grype-version: 0.119.0
+      - name: Enforce vulnerability policy
+        run: >-
+          bash tests/grype-gate.sh
+          grype-hummingbird.json
+          grype-fedora.json
+          tests/grype-exceptions.json
 
   publish:
     if: startsWith(github.ref, 'refs/tags/v')

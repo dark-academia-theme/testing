@@ -10,4 +10,12 @@ Set CursorBlink false
 
 Type "printf '\033[48;2;255;0;255mHARNESS SENTINEL\033[0m\n'"
 Enter
+Type "printf 'Regular: box ─│┌┐ combining é nerd  󰄱\n'"
+Enter
+Type "printf '\033[1mBold: box ─│┌┐ combining é nerd  󰄱\033[0m\n'"
+Enter
+Type "printf '\033[3mItalic: box ─│┌┐ combining é nerd  󰄱\033[0m\n'"
+Enter
+Type "printf '\033[1;3mBold Italic: box ─│┌┐ combining é nerd  󰄱\033[0m\n'"
+Enter
 Sleep 1s

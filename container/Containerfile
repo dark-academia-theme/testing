@@ -31,43 +31,43 @@ LABEL org.opencontainers.image.source="https://github.com/dark-academia-theme/te
 
 USER 0
 
-COPY container/keys/RPM-GPG-KEY-fedora-43-primary /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-43-primary
 COPY container/repositories/fedora-43.repo /etc/yum.repos.d/fedora-43.repo
+COPY container/fedora-43-amd64.lock /usr/share/theme-harness/locks/fedora-43-amd64.lock
+COPY container/install-fedora-closure.sh /usr/local/libexec/theme-harness/install-fedora-closure.sh
+COPY container/verify-fedora-closure.sh /usr/local/bin/verify-theme-harness-fedora-closure
 COPY --from=font-extractor /out/fonts/iosevka-nerd-font-mono /usr/local/share/fonts/iosevka-nerd-font-mono
 COPY --from=font-extractor /out/licenses/iosevka-nerd-fonts /usr/share/licenses/iosevka-nerd-fonts
 COPY container/verify-runtime.sh /usr/local/bin/verify-theme-harness-runtime
 
-RUN chmod 0755 /usr/local/bin/verify-theme-harness-runtime && \
-    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-43-primary && \
+RUN chmod 0755 \
+      /usr/local/libexec/theme-harness/install-fedora-closure.sh \
+      /usr/local/bin/verify-theme-harness-fedora-closure \
+      /usr/local/bin/verify-theme-harness-runtime && \
     dnf -y install \
       fontconfig-0:2.18.3-1.hum1.x86_64 \
       git-0:2.55.0-2.hum1.x86_64 \
+      glibc-gconv-extra-0:2.43-8.5.hum1.x86_64 \
       gzip-0:1.14-4.hum1.x86_64 \
       tar-2:1.35-10.hum1.x86_64 \
       xz-1:5.8.3-2.hum1.x86_64 && \
     dnf clean all
 
-# Fedora dependency resolution replaces the Hummingbird tar and glibc. Restore
-# every required Hummingbird direct package after the Fedora transaction.
-RUN dnf -y --disablerepo='*' --enablerepo=fedora-43-everything \
-      --setopt=install_weak_deps=False install --allowerasing \
-      chromium-0:141.0.7390.54-1.fc43.x86_64 \
-      ffmpeg-free-0:7.1.2-2.fc43.x86_64 \
-      ImageMagick-1:7.1.1.47-3.fc43.x86_64 \
-      jq-0:1.7.1-12.fc43.x86_64 \
-      tesseract-0:5.5.1-3.fc43.x86_64 \
-      tesseract-langpack-eng-0:4.1.0-11.fc43.noarch \
-      ttyd-0:1.7.7-7.fc43.x86_64 \
-      vhs-0:0.10.0-3.fc43.x86_64 && \
+# The locked Fedora transaction can replace Hummingbird packages. Restore every
+# required Hummingbird direct package before verifying the final Fedora subset.
+RUN /usr/local/libexec/theme-harness/install-fedora-closure.sh && \
     dnf -y install --allowerasing \
       fontconfig-0:2.18.3-1.hum1.x86_64 \
       git-0:2.55.0-2.hum1.x86_64 \
+      glibc-gconv-extra-0:2.43-8.5.hum1.x86_64 \
       gzip-0:1.14-4.hum1.x86_64 \
       tar-2:1.35-10.hum1.x86_64 \
       xz-1:5.8.3-2.hum1.x86_64 && \
     dnf clean all && \
+    rm -f /usr/local/libexec/theme-harness/install-fedora-closure.sh && \
+    verify-theme-harness-fedora-closure && \
     fc-cache --force && \
-    ln -s /usr/bin/chromium-browser /usr/local/bin/chromium && \
+    ln -s /usr/lib64/chromium-browser/headless_shell /usr/local/bin/chromium-browser && \
+    ln -s /usr/local/bin/chromium-browser /usr/local/bin/chromium && \
     groupadd --gid 1001 nonroot && \
     useradd --uid 1001 --gid 1001 --create-home \
       --home-dir /home/nonroot --shell /bin/bash nonroot && \

@@ -1,7 +1,15 @@
-[fedora-43-everything]
-name=Fedora 43 Everything
+[fedora-release]
+name=Fedora 43 Everything (release)
 baseurl=https://dl.fedoraproject.org/pub/fedora/linux/releases/43/Everything/$basearch/os/
 enabled=0
 gpgcheck=1
 repo_gpgcheck=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-43-primary
+gpgkey=https://src.fedoraproject.org/rpms/fedora-repos/raw/f43/f/RPM-GPG-KEY-fedora-43-primary
+
+[fedora-updates]
+name=Fedora 43 Everything (updates)
+baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/43/Everything/$basearch/
+enabled=0
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://src.fedoraproject.org/rpms/fedora-repos/raw/f43/f/RPM-GPG-KEY-fedora-43-primary
