@@ -34,6 +34,8 @@ RUN chmod 0755 /usr/local/libexec/theme-harness/*.sh \
       xz-1:5.8.3-2.hum1.x86_64 && \
     dnf clean all
 
+# Fedora dependency resolution replaces the Hummingbird tar and glibc. Restore
+# every required Hummingbird direct package after the Fedora transaction.
 RUN dnf -y --disablerepo='*' --enablerepo=fedora-43-everything \
       --setopt=install_weak_deps=False install --allowerasing \
       chromium-0:141.0.7390.54-1.fc43.x86_64 \

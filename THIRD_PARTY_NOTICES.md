@@ -20,6 +20,8 @@ image.
 - **Attribution and use:** the image metadata identifies Red Hat and Project
   Hummingbird. The base and its RPM contents are redistributed in the harness
   image; their installed notices are retained.
+- **Material modifications:** none to the base layers; this project adds later
+  image layers.
 
 ## Fedora 43 signing key and RPM packages
 
@@ -38,11 +40,18 @@ image.
   `2b1449a082d3264dda8e18369f04e9ac4163bf3f8cb530b0783dc2ab064a08ec`;
   verified key fingerprint `C6E7 F081 CF80 E131 4667 6E88 829B 6066 3164
   5531`; DNF enforces RPM signatures with `gpgcheck=1`.
+- **Signing-key license:** Fedora package metadata lists the `fedora-repos`
+  source and its `fedora-gpg-keys` subpackage as MIT, but the public-key file
+  has no file-specific license or attribution notice. This inventory records
+  provenance without asserting separate rights in the key material; publication
+  requires resolving that file-specific ambiguity.
 - **Licenses:** Chromium has BSD, LGPL, Apache, IJG, MIT, GPL, ISC, OpenSSL,
   and tri-licensed components; ImageMagick uses the ImageMagick license;
   Tesseract and its English data use Apache-2.0; jq uses MIT, ICU, and
   CC-BY-3.0; ttyd uses MIT; ffmpeg-free uses GPL-3.0-or-later. Package notices
   installed by the signed RPMs are retained in the redistributed image.
+- **Material modifications:** the key is copied byte-for-byte and RPM payloads
+  are installed without modification.
 
 ## Fedora VHS and runtime dependencies
 
@@ -57,6 +66,7 @@ image.
 - **Licenses:** Apache-2.0, BSD-3-Clause, MIT, MPL-2.0, and OFL-1.1 components.
   VHS and its dependencies are redistributed in the image with RPM-installed
   notices preserved.
+- **Material modifications:** none to the RPM payloads.
 
 ## Nerd Fonts Iosevka
 
@@ -71,19 +81,22 @@ image.
 - **License and attribution:** SIL Open Font License 1.1; copyright
   2015–2023 Renzhi Li (Belleve Invis). The required copyright and full license
   are copied from the versioned upstream notice and redistributed in the image.
+- **Material modifications:** none; the verified archive is extracted without
+  changing its font files.
 
 ## GitHub Actions
 
-The following actions are invoked only during CI and are not copied into the
-harness image. Each reference is pinned to a commit that matches the listed
-upstream release. MIT and Apache-2.0 notices remain in the action distributions
-provided by their publishers.
+All entries affect `.github/workflows/harness-image.yml`. They are invoked only
+during CI, are not copied into the harness image, and are not materially
+modified. Each integrity mechanism is a full Git commit SHA verified against
+the listed upstream release. Because this project does not redistribute their
+code, upstream action distributions retain their own required notices.
 
-| Action | Commit | Release | License |
+| Action and source | Commit | Release | License and attribution |
 | --- | --- | --- | --- |
-| `actions/checkout` | `3d3c42e5aac5ba805825da76410c181273ba90b1` | `v7.0.1` | MIT |
-| `docker/login-action` | `dbcb813823bdd20940b903addbd779551569679f` | `v4.6.0` | Apache-2.0 |
-| `docker/setup-buildx-action` | `f87e5991a6d7451dcb8d9637bfbc97413f497069` | `v4.4.1` | Apache-2.0 |
-| `docker/metadata-action` | `dc802804100637a589fabce1cb79ff13a1411302` | `v6.2.0` | Apache-2.0 |
-| `docker/build-push-action` | `c3c9e263c25d99ce0380d002d59b67737d91b0dc` | `v7.4.0` | Apache-2.0 |
-| `actions/attest` | `1e69f48acb82d1966a394da916b4c1698aa569d6` | `v4.2.2` | MIT |
+| [`actions/checkout`](https://github.com/actions/checkout) | `3d3c42e5aac5ba805825da76410c181273ba90b1` | `v7.0.1` | MIT; retain the GitHub copyright and MIT notice if redistributed. |
+| [`docker/login-action`](https://github.com/docker/login-action) | `dbcb813823bdd20940b903addbd779551569679f` | `v4.6.0` | Apache-2.0; retain its license, notices, and attribution if redistributed. |
+| [`docker/setup-buildx-action`](https://github.com/docker/setup-buildx-action) | `f87e5991a6d7451dcb8d9637bfbc97413f497069` | `v4.4.1` | Apache-2.0; retain its license, notices, and attribution if redistributed. |
+| [`docker/metadata-action`](https://github.com/docker/metadata-action) | `dc802804100637a589fabce1cb79ff13a1411302` | `v6.2.0` | Apache-2.0; retain its license, notices, and attribution if redistributed. |
+| [`docker/build-push-action`](https://github.com/docker/build-push-action) | `c3c9e263c25d99ce0380d002d59b67737d91b0dc` | `v7.4.0` | Apache-2.0; retain its license, notices, and attribution if redistributed. |
+| [`actions/attest`](https://github.com/actions/attest) | `1e69f48acb82d1966a394da916b4c1698aa569d6` | `v4.2.2` | MIT; retain the GitHub copyright and MIT notice if redistributed. |

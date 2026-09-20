@@ -11,6 +11,8 @@ rm -rf "${scratch_root}"
 install -d -m 0755 "${scratch_root}"
 {
   cat "${repo_root}/tests/smoke.tape"
+  # In VHS 0.10, Output *.png means a frame directory. Screenshot is the
+  # ordinary FFmpeg-backed single-PNG command and captures the next frame.
   printf 'Screenshot "%s"\n' "${screenshot}"
   printf 'Sleep 1s\n'
 } > "${tape}"
