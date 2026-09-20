@@ -23,6 +23,27 @@ image.
 - **Material modifications:** none to the base layers; this project adds later
   image layers.
 
+## Hummingbird direct RPM packages
+
+- **Affected path:** `container/Containerfile` and the resulting image.
+- **Source:** Hummingbird's signed x86_64 RPM repository at
+  <https://packages.redhat.com/api/pulp-content/public-hummingbird/x86_64/>.
+- **Versions:** fontconfig `0:2.18.3-1.hum1`, Git `0:2.55.0-2.hum1`, gzip
+  `0:1.14-4.hum1`, tar `2:1.35-10.hum1`, and xz `1:5.8.3-2.hum1`.
+- **Integrity:** exact NEVRA pins; DNF package-signature verification is enabled
+  with the repository key at
+  `/etc/pki/rpm-gpg/RPM-GPG-KEY-hummingbird-release`. Each installed direct RPM
+  reports RSA/SHA-256 key ID `199e2f91fd431d51`.
+- **Licenses:** fontconfig uses HPND, Fedora's public-domain license reference,
+  and Unicode-DFS-2016; Git uses BSD-3-Clause, GPL-2.0-only,
+  GPL-2.0-or-later, LGPL-2.1-or-later, and MIT; gzip uses GPL-3.0-or-later and
+  GFDL-1.3-only; tar uses GPL-3.0-or-later; xz uses 0BSD, GPL-2.0-or-later, and
+  Fedora's public-domain license reference.
+- **Attribution and use:** all five packages are redistributed inside the image.
+  Their RPM-installed copyright and license notices are retained under
+  `/usr/share/licenses` and `/usr/share/doc` where supplied.
+- **Material modifications:** none to the RPM payloads.
+
 ## Fedora 43 signing key and RPM packages
 
 - **Affected paths:** `container/keys/RPM-GPG-KEY-fedora-43-primary`,
