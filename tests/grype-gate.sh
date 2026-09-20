@@ -58,19 +58,21 @@ jq -n \
   --slurpfile hummingbird "${hummingbird_report}" \
   --slurpfile fedora "${fedora_report}" '
   {
-    matches: [
-      $hummingbird[0].matches[]
-      | select(
-          .artifact.type != "rpm"
-          or (.artifact.version | test("\\.hum[0-9]+(\\.|$)"))
-        )
-    ] + [
-      $fedora[0].matches[]
-      | select(
-          .artifact.type == "rpm"
-          and (.artifact.version | test("\\.fc43(\\.|$)"))
-        )
-    ]
+    matches: (
+      [
+        $hummingbird[0].matches[]
+        | select(
+            .artifact.type != "rpm"
+            or (.artifact.version | test("\\.hum[0-9]+(\\.|$)"))
+          )
+      ] + [
+        $fedora[0].matches[]
+        | select(
+            .artifact.type == "rpm"
+            and (.artifact.version | test("\\.fc43(\\.|$)"))
+          )
+      ]
+    )
   }
 ' > "${normalized_report}"
 
