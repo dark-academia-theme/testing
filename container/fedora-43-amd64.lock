@@ -1,7 +1,7 @@
 # Fedora 43 amd64 RPM transaction closure not satisfied by pinned Hummingbird RPMs
-# Generated from signed Fedora 43 release and updates metadata on 2026-09-20.
+# Generated from signed Fedora 43 release and updates metadata on 2026-09-21.
 # release-repomd-sha256: eb1d8634a798b5cfcef64b0114711f431f2cd186b55cce902f1883a32c6ff4f2
-# updates-repomd-sha256: 888f918096b5e45ca76c5df0be3bf77957089826e9bf9fb75ead08e07ec6e1a5
+# updates-repomd-sha256: b8d0b0d724ed3795e2a3d578a7bca69f344c2edfda200a6147a717c21acf78a8
 # key-fingerprint: C6E7F081CF80E13146676E88829B606631645531
 # fields: NEVRA<TAB>RPM-SHA256<TAB>REPOSITORY
 ImageMagick-1:7.1.2.27-1.fc43.x86_64	8396b644583d73921aa520c93b6c4170502ddb3de877db26f043f9e2e853e6c0	fedora-updates
