@@ -46,7 +46,7 @@ jobs:
           output-format: json
           output-file: grype-hummingbird.json
           fail-build: false
-          grype-version: 0.119.0
+          grype-version: v0.119.0
       - name: Scan Fedora package ecosystem
         # anchore/scan-action@v7.4.2
         uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439
@@ -57,7 +57,7 @@ jobs:
           output-format: json
           output-file: grype-fedora.json
           fail-build: false
-          grype-version: 0.119.0
+          grype-version: v0.119.0
       - name: Enforce vulnerability policy
         run: >-
           bash tests/grype-gate.sh
